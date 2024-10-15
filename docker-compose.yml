@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    build: ./backend  # Diretório onde está o Dockerfile
+    ports:
+      - "5000:5000"  # Mapeamento da porta
+    volumes:
+      - ./backend/output:/output  # Monta o diretório local no container
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"  # Mapeia a porta 8080 do host para a porta 80 no container

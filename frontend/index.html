@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWA OCR de Notas Fiscais</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+  >
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f4a73">
+           
+</head>
+<body>
+  <main class="container">
+    <h1>Envio de Notas Fiscais</h1>
+<form id="upload-form" enctype="multipart/form-data">
+  <label for="nota-fiscal">Tire uma foto da Nota Fiscal:</label>
+  <input type="file" accept="image/*" capture="environment" id="nota-fiscal" name="nota-fiscal" required>
+  <button type="submit">Enviar</button>
+</form>
+    <p id="status"></p>
+  </main>
+
+  <script>
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.getElementById('nota-fiscal');
+      formData.append('nota-fiscal', fileInput.files[0]);
+
+      const response = await fetch('http://127.0.0.1:5000/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById('status').textContent = result.message;
+    });
+  </script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js').then(registration => {
+        console.log('Service Worker registrado com sucesso:', registration);
+      }).catch(error => {
+        console.log('Falha ao registrar o Service Worker:', error);
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
+
